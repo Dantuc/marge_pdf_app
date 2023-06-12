@@ -1,11 +1,26 @@
+
+
 import tkinter as tk
 from explorer_files import browseFiles
+from merge_pdf import merge_pdf
+import os
 
 
-def save_name(file_name: tk.StringVar, marge_button: tk.Button):
-    print(file_name.get())
-    return file_name.get()
+def save_name_and_merge(file_name: tk.StringVar, marge_button: tk.Button):
 
+    final_name = file_name.get()
+
+    if final_name == "":
+        warning = warning_label("#A0522D")
+        return warning
+    
+    warning = warning_label(background_color)
+    path = browseFiles()
+    output_path = path +"/" + final_name + ".pdf"
+    merge_pdf(path, output_path)
+    return
+
+#config button standard
 def button_config(name):
     button_config = tk.Button(
         root, 
@@ -16,6 +31,7 @@ def button_config(name):
         )
     return button_config
 
+#config label standard
 def label_config(title):
     label_config = tk.Label(
     root,
@@ -25,10 +41,23 @@ def label_config(title):
     )
     return label_config
 
+#warning label:
+def warning_label(fg):
+    warning = tk.Label(
+        root,
+        text= "Digite um nome válido!!",
+        background= background_color, 
+        font=("Helvetica", 7),
+        fg=fg
+        )
+    warning.grid(row= 3, column= 1)
+    
+
 root = tk.Tk()
 
-title = "PDF Marger"
+title = "PDF Merger"
 background_color = "#F5DEB3"
+
 # Title config
 main_tittle = tk.Label(
     root,
@@ -42,10 +71,6 @@ main_tittle.grid(row=0, column=0, columnspan=3, pady=(0,20))
 file_label = label_config("Nome do arquivo: ")
 file_label.grid(row=2, column=0)
 
-# Text config
-explorer_label = label_config("Escolha uma pasta: ")
-explorer_label.grid(row=1, column=0)
-
 #Entry name config
 file_name = tk.StringVar()
 validate_entry = tk.Entry(
@@ -56,15 +81,10 @@ validate_entry = tk.Entry(
 )
 validate_entry.grid(row= 2, column= 1)
 
-#explorer button config
-explorer_button = button_config("Select Path")
-explorer_button.grid(row= 1, column= 1)
-explorer_button.config(command= browseFiles)
-
-#marge button config
-marge_button = button_config("Marge")
-marge_button.grid(row= 2, column= 2)
-marge_button.config(command= lambda: save_name(file_name, marge_button))
+#merge button config
+merge_button = button_config("Merge")
+merge_button.grid(row= 2, column= 2)
+merge_button.config(command= lambda: save_name_and_merge(file_name, merge_button))
 
 
 
